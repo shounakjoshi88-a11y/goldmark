@@ -198,6 +198,11 @@ func scanHTMLBlockOpen7(line []byte) (tagName []byte, isCloseTag, hasAttr, ok bo
 	}
 	switch line[end] {
 	case '/':
+		if isCloseTag {
+			// A closing tag has neither attributes nor a self-closing slash:
+			// "</", a tag name, optional spaces and tabs, and ">".
+			return tagName, isCloseTag, hasAttr, false
+		}
 		if end+1 >= len(line) || line[end+1] != '>' {
 			return tagName, isCloseTag, hasAttr, false
 		}
